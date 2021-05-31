@@ -1,0 +1,81 @@
+html,
+body {
+  font-family: "Ubuntu", sans-serif;
+  color: #ffffff;
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+  margin: 0;
+}
+.container-fluid {
+  padding: 0 26px;
+  margin: 0;
+  width: 100%;
+  background: -moz-linear-gradient(
+    -45deg,
+    rgba(154, 57, 163, 1) 0%,
+    rgba(65, 103, 168, 1) 100%
+  );
+}
+h1 {
+  display: block;
+  margin: 0 auto 25px auto;
+  text-align: center;
+  font-size: 3em;
+  font-weight: 600;
+  letter-spacing: -0.055em;
+  padding-top: 10px;
+}
+.SearchBox {
+  width: 100%;
+  max-width: 800px;
+  height: 60px;
+  margin: 0 auto;
+}
+
+input {
+  width: 700px;
+  height: 50px;
+  border-radius: 120px;
+  margin: 0 auto;
+  text-align: center;
+  outline: none;
+  background: transparent;
+  color: #ffffff;
+  border: 1px white solid;
+  transition: all 1s;
+}
+input:focus {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  transition: all 1s;
+}
+
+.searchBtn {
+  background-color: transparent;
+  border: none;
+  color: white;
+}
+.searchBtn:hover {
+  cursor: pointer;
+}
+
+a {
+  display: block;
+  margin: 0 auto;
+  font-size: 2em;
+  font-weight: 600;
+  letter-spacing: -0.055em;
+  padding-top: 10px;
+  color: white;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: white;
+}
+p {
+  max-width: 560px;
+  font-weight: 400;
+}
