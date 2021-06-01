@@ -1,10 +1,7 @@
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-
-import jdk.internal.org.objectweb.asm.tree.analysis.Value;
-import jdk.javadoc.internal.tool.Main;
-
 import java.io.File;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -41,29 +38,34 @@ class InvertedIndexer
     }
 
     int NumOfCurFile;
-    File HashFiles[];
     String URLS[];
     ArrayList<HashMap<String,Posting>>PartialIndexer;   
     HashMap<String,ArrayList<Posting>> MainIndexer;
-    
+    Stemmer Stem;
 
     public InvertedIndexer(String NamesOfFiles[]) throws Exception
     {
         NumOfCurFile=0;
-        HashFiles=new File[5001];
+        URLS=new String[5001];
+        Stem=new Stemmer();
+        MainIndexer=new HashMap<String,ArrayList<Posting>>();
+        PartialIndexer= new ArrayList<HashMap<String,Posting>>();
         for(int i=0;i<NamesOfFiles.length;i++)
-        {
-            File file=new File(NamesOfFiles[i]);
-            IndexFile(file);
-        }
+            IndexFile(NamesOfFiles[i]);
     }
 
-    public void IndexFile(File file) throws Exception
+    public void IndexFile(String file) throws Exception
     {
-        BufferedReader Input=new BufferedReader(new FileReader(file));
-        HashFiles[NumOfCurFile]= file;
-
         HashMap<String,Posting> CurPart=new HashMap<String,Posting>();
+
+        String path= Paths.get("").toAbsolutePath().toString();
+
+        BufferedReader Input=new BufferedReader(new FileReader(path+"\\"+file+".html"));
+        URLS[NumOfCurFile]=Input.readLine();
+
+        Stem.parser(file);
+
+        Input=new BufferedReader(new FileReader(path+"\\"+file+".txt"));
 
         int WordPos=0, WordImp=0;
         for(String str=Input.readLine();str!=null;str=Input.readLine())
