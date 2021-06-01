@@ -1,6 +1,10 @@
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+
+import jdk.internal.org.objectweb.asm.tree.analysis.Value;
+import jdk.javadoc.internal.tool.Main;
+
 import java.io.File;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -38,6 +42,7 @@ class InvertedIndexer
 
     int NumOfCurFile;
     File HashFiles[];
+    String URLS[];
     ArrayList<HashMap<String,Posting>>PartialIndexer;   
     HashMap<String,ArrayList<Posting>> MainIndexer;
     
@@ -105,6 +110,16 @@ class InvertedIndexer
         }
     }
 
+    public String[] Query(String word)
+    {
+        String ret[];
+        ArrayList<Posting> Value=MainIndexer.get(word);
+        int num=Value.size();
+        ret=new String[num];
+        for(int i=0;i<num;i++)
+            ret[i]=URLS[Value.get(i).FileId];
+        return ret;    
+    }
 
 }
 

@@ -410,7 +410,7 @@ public class Stemmer {
   }
 
   public static String parser(String fileName) throws IOException {
-    FileWriter myWriter = new FileWriter("StemmedWords.txt");
+    FileWriter myWriter = new FileWriter(fileName+".txt");
     StringBuilder sb = new StringBuilder();
     String line;
     FileReader reader = new FileReader( Paths.get("")
