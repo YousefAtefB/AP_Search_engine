@@ -1,23 +1,13 @@
-
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Locale;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
-import org.jsoup.select.NodeFilter;
-import org.w3c.dom.Node;
-import org.json.simple.*;
-import javax.swing.text.html.parser.Parser;
 
 public class Stemmer {
   private char[] b;
@@ -56,7 +46,7 @@ public class Stemmer {
 
   /** return stemmed word */
   public String getStem() {
-    return new String(b, 0, i_end);
+    return new String(b, 0, i_end).toLowerCase(Locale.ROOT);
   }
 
   /** Returns the length of the word resulting from the stemming process. */
@@ -423,7 +413,8 @@ public class Stemmer {
     FileWriter myWriter = new FileWriter("StemmedWords.txt");
     StringBuilder sb = new StringBuilder();
     String line;
-    FileReader reader = new FileReader("C:\\Users\\kahmd\\Desktop\\Indexer\\" + fileName + ".html");
+    FileReader reader = new FileReader( Paths.get("")
+            .toAbsolutePath()+"\\"+fileName + ".html");
     BufferedReader br = new BufferedReader(reader);
     while ((line = br.readLine()) != null) {
       sb.append(line);
@@ -442,7 +433,8 @@ public class Stemmer {
     String bodyParsed = doc.text();
     // remove Digits and Special Characters from bodyParsed string
     bodyParsed = bodyParsed.replaceAll("[\\d-+.^:,*!@#$%_·?©×\"'()<>{}؛÷،/:φ=]", "");
-    List<String> stopwords = Files.readAllLines(Paths.get("stopWords.txt"));
+    List<String> stopwords = Files.readAllLines(Path.of(Paths.get("")
+            .toAbsolutePath() + "\\" + "stopWords.txt"));
 
     myWriter.write("*title\n");
     for (String word : title.split(" ")) {

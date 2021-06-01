@@ -12,6 +12,11 @@ body {
   padding: 0 26px;
   width: 100%;
   height: 100%;
+  background-color: linear-gradient(
+    -45deg,
+    rgba(154, 57, 163, 1) 0%,
+    rgba(65, 103, 168, 1) 100%
+  );
   background: -moz-linear-gradient(
     -45deg,
     rgba(154, 57, 163, 1) 0%,
@@ -39,7 +44,7 @@ h2 {
 
 .SearchBox {
   width: 100%;
-  max-width: 360px;
+  max-width: 800px;
   height: 60px;
   margin: 0 auto;
 }
@@ -55,6 +60,7 @@ input {
   color: #ffffff;
   border: 1px white solid;
   transition: all 1s;
+  margin-left: 32%;
 }
 input:focus {
   width: 300px;
@@ -69,7 +75,7 @@ input:focus {
   background: transparent;
   color: #ffffff;
   transition: all 1s;
-  content: "Search";
+  margin-left: 32%;
 }
 
 .searchBtn1 {
@@ -78,7 +84,7 @@ input:focus {
   color: white;
   font-size: 5em;
   margin: 0 auto;
-  margin-left: 40%;
+  margin-left: 45%;
 }
 
 .searchBtn {
@@ -91,4 +97,11 @@ input:focus {
   border: none;
   color: white;
   cursor: pointer;
+}
+
+button,
+button:focus {
+  background-color: transparent;
+  border: none;
+  outline: none;
 }

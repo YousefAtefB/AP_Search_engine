@@ -26,7 +26,7 @@ h1 {
   letter-spacing: -0.055em;
   padding-top: 10px;
 }
-.SearchBox {
+.SearchBoxR {
   width: 100%;
   max-width: 800px;
   height: 60px;
@@ -52,12 +52,12 @@ input:focus {
   transition: all 1s;
 }
 
-.searchBtn {
+.searchBtnR {
   background-color: transparent;
   border: none;
   color: white;
 }
-.searchBtn:hover {
+.searchBtnR:hover {
   cursor: pointer;
 }
 
