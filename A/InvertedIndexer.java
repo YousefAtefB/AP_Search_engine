@@ -1,3 +1,5 @@
+package A;
+
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -39,19 +41,28 @@ class InvertedIndexer
 
     int NumOfCurFile;
     String URLS[];
-    ArrayList<HashMap<String,Posting>>PartialIndexer;   
+    String Titles[];
+    ArrayList<HashMap<String,Posting>>PartialIndexer;
     HashMap<String,ArrayList<Posting>> MainIndexer;
     Stemmer Stem;
 
-    public InvertedIndexer(String NamesOfFiles[]) throws Exception
+    public InvertedIndexer(String NamesOfFiles[])
     {
         NumOfCurFile=0;
         URLS=new String[5001];
+        Titles = new String[5001];
         Stem=new Stemmer();
         MainIndexer=new HashMap<String,ArrayList<Posting>>();
         PartialIndexer= new ArrayList<HashMap<String,Posting>>();
-        for(int i=0;i<NamesOfFiles.length;i++)
-            IndexFile(NamesOfFiles[i]);
+        try {
+
+            for (int i = 0; i < NamesOfFiles.length; i++)
+                IndexFile(NamesOfFiles[i]);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void IndexFile(String file) throws Exception
@@ -62,11 +73,11 @@ class InvertedIndexer
 
         BufferedReader Input=new BufferedReader(new FileReader(path+"\\"+file+".html"));
         URLS[NumOfCurFile]=Input.readLine();
-
         Stem.parser(file);
 
         Input=new BufferedReader(new FileReader(path+"\\"+file+".txt"));
-
+        Titles[NumOfCurFile] = Input.readLine();
+        System.out.println(Titles[NumOfCurFile]);
         int WordPos=0, WordImp=0;
         for(String str=Input.readLine();str!=null;str=Input.readLine())
         {
@@ -112,15 +123,32 @@ class InvertedIndexer
         }
     }
 
-    public String[] Query(String word)
+    public String[] QueryUrl(String word)
     {
         String ret[];
         ArrayList<Posting> Value=MainIndexer.get(word);
-        int num=Value.size();
-        ret=new String[num];
-        for(int i=0;i<num;i++)
-            ret[i]=URLS[Value.get(i).FileId];
-        return ret;    
+        if(Value!=null) {
+            int num = Value.size();
+            ret = new String[num];
+            for (int i = 0; i < num; i++)
+                ret[i] = URLS[Value.get(i).FileId];
+            return ret;
+        }
+        return null;
+    }
+
+    public String[] QueryTitle(String word)
+    {
+        String ret[];
+        ArrayList<Posting> Value=MainIndexer.get(word);
+        if(Value!=null) {
+            int num = Value.size();
+            ret = new String[num];
+            for (int i = 0; i < num; i++)
+                ret[i] = Titles[Value.get(i).FileId];
+            return ret;
+        }
+        return null;
     }
 
 }

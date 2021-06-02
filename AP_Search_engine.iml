@@ -10,8 +10,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="AP_Search_engine" level="project" />
-    <orderEntry type="library" name="json-simple-1.1.1" level="project" />
-    <orderEntry type="library" name="servlet-api" level="project" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
@@ -21,5 +19,8 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="json-simple-1.1.11" level="project" />
+    <orderEntry type="library" name="servlet-api1" level="project" />
+    <orderEntry type="library" name="json-simple-1.1.1" level="project" />
   </component>
 </module>

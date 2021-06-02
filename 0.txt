@@ -1,3 +1,4 @@
+Characterizing sinusoidal signals with equations
 *title
 character
 sinusoid

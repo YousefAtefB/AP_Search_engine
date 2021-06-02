@@ -1,3 +1,5 @@
+package A;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -434,8 +436,8 @@ public class Stemmer {
     // remove Digits and Special Characters from bodyParsed string
     bodyParsed = bodyParsed.replaceAll("[\\d-+.^:,*!@#$%_·?©×\"'()<>{}؛÷،/:φ=]", "");
     List<String> stopwords = Files.readAllLines(Path.of(Paths.get("")
-            .toAbsolutePath() + "\\" + "stopWords.txt"));
-
+            .toAbsolutePath() + "\\" + "A/stopWords.txt"));
+    myWriter.write(doc.title()+"\n");
     myWriter.write("*title\n");
     for (String word : title.split(" ")) {
       word = word.toLowerCase();
