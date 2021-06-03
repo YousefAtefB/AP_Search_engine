@@ -1,3 +1,5 @@
 node_modules/
 apache-tomcat-9.0.46/
 out/
+*.html
+*.txt

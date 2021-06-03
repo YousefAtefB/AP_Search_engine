@@ -412,11 +412,10 @@ public class Stemmer {
   }
 
   public static String parser(String fileName) throws IOException {
-    FileWriter myWriter = new FileWriter(fileName+".txt");
+    FileWriter myWriter = new FileWriter("F:\\AP_Search_engine\\apache-tomcat-9.0.46-windows-x64\\apache-tomcat-9.0.46\\bin\\"+fileName+".txt");
     StringBuilder sb = new StringBuilder();
     String line;
-    FileReader reader = new FileReader( Paths.get("")
-            .toAbsolutePath()+"\\"+fileName + ".html");
+    FileReader reader = new FileReader( "F:\\AP_Search_engine\\apache-tomcat-9.0.46-windows-x64\\apache-tomcat-9.0.46\\bin\\" +fileName+ ".html");
     BufferedReader br = new BufferedReader(reader);
     while ((line = br.readLine()) != null) {
       sb.append(line);

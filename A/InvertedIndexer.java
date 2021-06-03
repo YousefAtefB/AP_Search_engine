@@ -69,15 +69,13 @@ class InvertedIndexer
     {
         HashMap<String,Posting> CurPart=new HashMap<String,Posting>();
 
-        String path= Paths.get("").toAbsolutePath().toString();
 
-        BufferedReader Input=new BufferedReader(new FileReader(path+"\\"+file+".html"));
+        BufferedReader Input=new BufferedReader(new FileReader("F:\\AP_Search_engine\\apache-tomcat-9.0.46-windows-x64\\apache-tomcat-9.0.46\\bin"+"\\"+file+".html"));
         URLS[NumOfCurFile]=Input.readLine();
         Stem.parser(file);
 
-        Input=new BufferedReader(new FileReader(path+"\\"+file+".txt"));
+        Input=new BufferedReader(new FileReader("F:\\AP_Search_engine\\apache-tomcat-9.0.46-windows-x64\\apache-tomcat-9.0.46\\bin"+"\\"+file+".txt"));
         Titles[NumOfCurFile] = Input.readLine();
-        System.out.println(Titles[NumOfCurFile]);
         int WordPos=0, WordImp=0;
         for(String str=Input.readLine();str!=null;str=Input.readLine())
         {
