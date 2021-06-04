@@ -11,6 +11,9 @@ public class source3 {
     {
         try
         {
+            myCrawler.Current_URL_Index = myCrawler.ContinueCrawler(); //get last url
+            myCrawler.Current_Downloaded_File_Index = myCrawler.Current_URL_Index;
+
             String page = "URLs.txt";        //contains all our URLs till now
             File urlFILE = new File(page);
             FileReader fr = new FileReader(urlFILE);
@@ -18,6 +21,10 @@ public class source3 {
             String line;
             String ourPage = "result.txt"; // holds the content of the downloaded pages
     
+            for(int i = 0 ; i <= myCrawler.Current_URL_Index ; i++)
+            {
+                br.readLine();           //skip lines to the last line read
+            }
             while((line = br.readLine()) != null)
             {
                 myCrawler.download(line, page, ourPage);

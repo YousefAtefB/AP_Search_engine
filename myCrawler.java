@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 
 import java.net.URL;
@@ -13,10 +14,14 @@ import java.net.URLConnection;
 
 
 import java.util.HashSet;
+import java.util.Scanner;
 import java.util.Set;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+
+//import jdk.nashorn.internal.ir.CatchNode;
+
 import org.jsoup.nodes.Element;
     
 
@@ -40,6 +45,19 @@ public class myCrawler
     public static void download(String stringurl, String Seed, String NameOfFile)throws IOException
     //NameOfFile is the name of the destination file which will hold the contents of our downloaded webpage
     {
+        File PrevURLs = new File("PrevURLs.txt");
+        PrevURLs.createNewFile();
+        BufferedReader bf = new BufferedReader(new FileReader(PrevURLs));
+        String testURL;
+        while((testURL = bf.readLine()) != null)
+        {
+            if(stringurl == testURL)
+            {
+                System.out.println("URL already crawled !");
+                return;
+            }
+        }
+        bf.close();
         URL url = new URL(stringurl);
         InputStream Stream;
         try{
@@ -75,23 +93,30 @@ public class myCrawler
         FileWriter Writer = new FileWriter(NameOfFile);
         try
         {
-            AddUrl(Seed, stringurl);        //crawl the url for other urls and add them to urls.txt
-            Current_URL_Index++;
-            Writer.write(stringurl);        //(IMPORTANT)first line is always the url of the page
-            Writer.append("\n");
-            while((i = Stream.read()) != -1)
+            if(ReadRobots(stringurl) == 1)
             {
-                Writer.write((char)i);
+                AddUrl(Seed, stringurl);        //crawl the url for other urls and add them to urls.txt
+                Current_URL_Index++;
+                Writer.write(stringurl);        //(IMPORTANT)first line is always the url of the page
+                Writer.append("\n");
+                while((i = Stream.read()) != -1)
+                {
+                    Writer.write((char)i);
+                }
+                Writer.write("\n \n");
+                Writer.close();
+                System.out.println("Page Downloaded !");
             }
-            Writer.write("\n \n");
-            Writer.close();
-            System.out.println("Page Downloaded !");
+            
         }
         catch(IOException e)
         {
             System.out.println("error occured");
             e.printStackTrace();
         }
+
+        Stream.close();
+        Writer.close();
         
 
     }
@@ -124,82 +149,90 @@ public class myCrawler
 
     public static int ReadRobots (String urlstring) throws IOException
     {
+        
         URL url = new URL(urlstring);
         URLConnection urlCon = url.openConnection();
-        InputStream Stream = urlCon.getInputStream();
+        
         String currentFile = url.getFile();
-        boolean flag = false;                   
+        String hostname = url.getHost();
+        String HostURL =  url.getProtocol().concat("://").concat(hostname).concat("/robots.txt"); //root directory then robots.txt
+        Document doc = Jsoup.connect(HostURL).get();
+        String pgtext = doc.body().text();
+        Scanner scanner = new Scanner(pgtext);                 
         //if end of file is reached before we reach our filename in a disallow (true)
         //otherwise (false)
-        char[] buff = new char [80];
+        String buff = "lol";
         int i = 0;
-        do{
-            buff[i] = (char)Stream.read();
-            if( i >=1 && buff[i] == 10 && buff[i-1] == 13)
-            {
-                i = 0;    //flush buffer
-            }
-            else if(buff[i] == -1) //end of file
-            {
-                flag = true;
-                break;
-            }
-            else
-            {
-                i++;
-            }
+        while(scanner.hasNextLine())
+        {
+            buff = scanner.nextLine();
         }
-        while(!buff.equals("User-agent: *") || !buff.equals("User-agent:*") || !flag); //group of all crawlers
+        String test1 = "Disallow: ".concat(currentFile);
+        String test2 = "Disallow:".concat(currentFile);
+        if(buff.contains(test1) || buff.contains(test2))
+        {
+            //System.out.println("Prohibited to crawl !");
+            scanner.close();
+            return 0;
+        }
+        //System.out.println("good to crawl");
+        scanner.close();
+        return 1;
+        // do{
+        //     //buff = Stream.readLine();
+            
+        //     buff = scanner.nextLine();
+        //     // if (buff == null)
+        //     // {
+        //     //     flag = true;
+        //     // }
+        //     System.out.println(buff);
+        // }
+        // while(scanner.hasNextLine() && !(buff.contains("User-agent: *")) && !(buff.contains("User-agent:*")) ); //group of all crawlers
         
         
        
 
-        do{
-            i = 0;
-            do{
-                buff[i] = (char)Stream.read();
-                if(i == 0 && buff[i] == 'U')  //any line that doesnt begin with allow or disallow (specifying other user-agents)
-                {
-                    flag = true;
-                    break;
-                }
-                if( i >=1 && buff[i] == 10 && buff[i-1] == 13)
-                {
-                    i = 0;    //flush buffer
-                }
-                else if(buff[i] == -1) //end of file
-                {
-                    flag = true;
-                    break;
-                }
-                else
-                {
-                    i++;
-                }
-            }
-            while(!buff.equals("Disallow: ") || !buff.equals("Disallow:") || !flag); //if read disallow
-    
-            buff[i] = (char)Stream.read();
-            if( i >=1 && buff[i] == 10 && buff[i-1] == 13)
-            {
-                i = 0;    //flush buffer
-            }
-            else if(buff[i] == -1) //end of file
-                {
-                    flag = true;
-                    break;
-                }
-            else
-            {
-                i++;
-            }
-            if(buff.equals(url.getFile()))
-            {
-                return 0;
-            }
-        }
-        while(!buff.equals(url.getFile()) || !flag); //if read disallow:/filename
-        return 1;
+        // do{
+        //     do{
 
+        //         buff = scanner.nextLine();
+        //         if ( buff == null)
+        //         {
+        //             flag = true;
+        //         }
+        //         System.out.println(buff);
+        //     }
+        //     while( !flag && scanner.hasNextLine() && !(buff.contains("Disallow: ")) && !(buff.contains("Disallow:"))); //if read disallow
+    
+        //     if( !flag && buff.contains(currentFile))
+        //     {
+        //          ///////////////////////// just for debugging//////////////////////
+        //          System.out.println("Prohibited to crawl !");
+                
+        //          return 0;
+        //     } 
+       
+        // }
+        // while(!flag && scanner.hasNextLine() && !(buff.contains("User-Agent"))); //if not read disallow:/filename
+        // Stream.close();
+        
+        // System.out.println("good to crawl");
+        // return 1;
+    
+    }
+
+    public static int ContinueCrawler ()
+    {
+        int i = 1;
+        File testfile;
+        do
+        {
+            String filename = Integer.toString(i).concat(".txt");
+            testfile = new File("D:" + File.separator + "java Folder" + File.separator + "DownPages" + File.separator + filename);
+            i++;
+        }
+        while(testfile.exists());
+        return i;
     }
 }
