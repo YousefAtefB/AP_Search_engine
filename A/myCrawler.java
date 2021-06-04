@@ -58,8 +58,8 @@ public class myCrawler
         NameOfFile = Integer.toString(Current_Downloaded_File_Index).concat(".html");
         Current_Downloaded_File_Index++;
         try{
-            File myFile = new File("F:\\AP_Search_engine\\apache-tomcat-9.0.46-windows-x64\\apache-tomcat-9.0.46\\bin\\"+NameOfFile); //hard coded to put in folder "DownPages"
-            //TODO : change the directory of the folder to your directory
+            //TODO : change the directory of the folder to your directory1
+            File myFile = new File("F:\\pages\\"+NameOfFile); //hard coded to put in folder "DownPages"
             if(myFile.createNewFile())
             {
                 System.out.println("File " + NameOfFile + " Created");
@@ -75,7 +75,8 @@ public class myCrawler
             System.out.println("error occured");
             e.printStackTrace();
         }
-        FileWriter Writer = new FileWriter("F:\\AP_Search_engine\\apache-tomcat-9.0.46-windows-x64\\apache-tomcat-9.0.46\\bin\\"+NameOfFile);
+        //TODO : change the directory of the folder to your directory2
+        FileWriter Writer = new FileWriter("F:\\pages\\"+NameOfFile);
         try
         {
             AddUrl(Seed, stringurl);        //crawl the url for other urls and add them to urls.txt

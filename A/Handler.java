@@ -12,6 +12,7 @@ public class Handler extends HttpServlet  {
         try {
             String Urls[] = Main.II.QueryUrl(s.getStem());
             String Titles[] = Main.II.QueryTitle(s.getStem());
+            String Bodies[] = Main.II.QueryBodies(s.getStem());
             Res.setContentType("text/html");
             String page = "<!DOCTYPE html>\n" +
                     "<html lang=\"en\">\n" +
@@ -55,10 +56,8 @@ public class Handler extends HttpServlet  {
                 for(int i=0;i<Urls.length;i++) {
                     page +=       " <div class=\"line-content\">"+
                             "                <a target="+'"'+"_blank"+'"'+"href="+Urls[i]+">"+Titles[i]+"</a>\n" +
-                            "                <p>In addition to organic search results, search engine results pages (SERPs) usually include paid\n" +
-                            "                    search\n" +
-                            "                    and\n" +
-                            "                    pay-per-click (PPC) ads. Thanks to search engine ...</p>\n"+
+                            "                    <p style=\"color: rgb(57, 198, 241); font-size: 1em;\">"+Urls[i]+"</p>\n"+
+                            "                <p>"+Bodies[i].substring(0,150)+"</p>\n"+
                             "</div>";
                 }
             }
@@ -79,13 +78,19 @@ public class Handler extends HttpServlet  {
                            "\n" +
                            "    for (var i = 0; i < pageCount; i++) {\n" +
                            "\n" +
-                           "        $(\"#pagin\").append('<li  class=\"page-item\"><a style=\"background-color: rgba(154, 57, 163, 1) ; color:white;\" class=\"page-link\" href=\"#\">' + (i + 1) + '</a></li> ');\n" +
+                           "        $(\"#pagin\").append('<li class=\"page-item\"><a  style = \"background-color: rgba(154, 57, 163, 1) ; color:white;\" class= \"page-link\" href = \"#\" > ' + (i + 1) + '</a ></li > ');\n" +
                            "\n" +
                            "    }\n" +
+                           "    $(\"#pagin li:first-Child a\").css(\"background-color\", \"rgb(78, 2, 170)\");\n" +
+                           "    $(\"#pagin li a\").hover(function () {\n" +
+                           "        $(this).css(\"color\", \"rgb(78, 2, 170)\")\n" +
+                           "    }, function () {\n" +
+                           "        $(this).css(\"color\", \"white\")\n" +
+                           "    }\n" +
+                           "    );\n" +
                            "    showPage = function (page) {\n" +
                            "        $(\".line-content\").hide();\n" +
                            "        $(\".line-content\").each(function (n) {\n" +
-                           "            console.log(n);\n" +
                            "            if (n >= 20 * (page - 1) && n < 20 * page)\n" +
                            "                $(this).show();\n" +
                            "        });\n" +
@@ -93,11 +98,11 @@ public class Handler extends HttpServlet  {
                            "\n" +
                            "    showPage(1);\n" +
                            "\n" +
-                           "    /* $(\"#pagin li a\").click(function () {\n" +
-                           "         $(\"#pagin li\").removeClass(\"active\");\n" +
-                           "         $(this).parent().addClass(\"active\");\n" +
-                           "         showPage(parseInt($(this).text()))\n" +
-                           "     });*/\n" +
+                           "    $(\"#pagin li a\").click(function () {\n" +
+                           "        $(\"#pagin li a\").css(\"background-color\", \"rgba(154, 57, 163, 1)\");\n" +
+                           "        $(this).css(\"background-color\", \"rgb(78, 2, 170)\");\n" +
+                           "        showPage(parseInt($(this).text()))\n" +
+                           "    });\n" +
                            "</script>" +
                            "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js\"></script>\n"+
                     "</html>";
