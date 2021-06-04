@@ -412,11 +412,12 @@ public class Stemmer {
   }
 
   public static String parser(String fileName) throws IOException {
-    FileWriter myWriter = new FileWriter(fileName+".txt");
+    //TODO : change the directory of the folder to your directory3
+    FileWriter myWriter = new FileWriter("F:\\pages\\"+fileName+".txt");
     StringBuilder sb = new StringBuilder();
     String line;
-    FileReader reader = new FileReader( Paths.get("")
-            .toAbsolutePath()+"\\"+fileName + ".html");
+    //TODO : change the directory of the folder to your directory4
+    FileReader reader = new FileReader( "F:\\pages\\" +fileName+ ".html");
     BufferedReader br = new BufferedReader(reader);
     while ((line = br.readLine()) != null) {
       sb.append(line);
@@ -435,9 +436,11 @@ public class Stemmer {
     String bodyParsed = doc.text();
     // remove Digits and Special Characters from bodyParsed string
     bodyParsed = bodyParsed.replaceAll("[\\d-+.^:,*!@#$%_·?©×\"'()<>{}؛÷،/:φ=]", "");
+    //TODO : change the directory of the folder to your directory5
     List<String> stopwords = Files.readAllLines(Path.of(Paths.get("")
             .toAbsolutePath() + "\\" + "A/stopWords.txt"));
     myWriter.write(doc.title()+"\n");
+    myWriter.write(bodyParsed.replaceAll("  "," ")+"\n");
     myWriter.write("*title\n");
     for (String word : title.split(" ")) {
       word = word.toLowerCase();
@@ -472,72 +475,5 @@ public class Stemmer {
 
   public static void main(String[] args) throws IOException {
     parser("0");
-    /* FileWriter file = null;
-       JSONObject obj = new JSONObject();
-       file = new FileWriter("index.json");
-       file.append("[");
-
-       for (int i = 0; i < 2; i++) {
-       obj.put("Word", i);
-       JSONArray urls = new JSONArray();
-       urls.add("Urls: www.ggg.com");
-       urls.add("Urls: www.aaa.com");
-       urls.add("Urls: www.yyy.com");
-       obj.put("Urls List", urls);
-       try {
-         // Constructs a FileWriter given a file name, using the platform's default charset
-         file.append(obj.toJSONString());
-         file.append(",");
-         CrunchifyLog("Successfully Copied JSON Object to File...");
-        // CrunchifyLog("\nJSON Object: " + obj);
-
-       } catch (IOException e) {
-         e.printStackTrace();
-
-       } finally {
-
-         try {
-           file.flush();
-         } catch (IOException e) {
-           // TODO Auto-generated catch block
-           e.printStackTrace();
-         }
-       }
-       }
-       file.append("]");
-      JSONParser jsonParser = new JSONParser();
-
-       try (FileReader reader = new FileReader("index.json"))
-       {
-          //Read JSON file
-          Object objj = jsonParser.parse(reader);
-
-          JSONArray employeeList = (JSONArray) objj;
-
-          //Iterate over employee array
-          employeeList.forEach( emp -> parseEmployeeObject( (JSONObject) emp ) );
-
-       } catch (FileNotFoundException e) {
-          e.printStackTrace();
-       } catch (IOException e) {
-          e.printStackTrace();
-       } catch (ParseException e) {
-          e.printStackTrace();
-       }
-    }
-
-    private static void parseEmployeeObject(JSONObject employee)
-    {
-       //Get employee object within list
-       String employeeObject = (String) employee.get("Word");
-       System.out.println(employeeObject);
-
-       //Get employee first name
-       JSONArray firstName = (JSONArray) employee.get("Urls List");
-       System.out.println(firstName);
-    }
-    static public void CrunchifyLog(String str) {
-       System.out.println(str);
-    }*/
   }
    }

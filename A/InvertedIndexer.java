@@ -42,6 +42,7 @@ class InvertedIndexer
     int NumOfCurFile;
     String URLS[];
     String Titles[];
+    String Bodies[];
     ArrayList<HashMap<String,Posting>>PartialIndexer;
     HashMap<String,ArrayList<Posting>> MainIndexer;
     Stemmer Stem;
@@ -51,6 +52,7 @@ class InvertedIndexer
         NumOfCurFile=0;
         URLS=new String[5001];
         Titles = new String[5001];
+        Bodies = new String[5001];
         Stem=new Stemmer();
         MainIndexer=new HashMap<String,ArrayList<Posting>>();
         PartialIndexer= new ArrayList<HashMap<String,Posting>>();
@@ -69,15 +71,14 @@ class InvertedIndexer
     {
         HashMap<String,Posting> CurPart=new HashMap<String,Posting>();
 
-        String path= Paths.get("").toAbsolutePath().toString();
-
-        BufferedReader Input=new BufferedReader(new FileReader(path+"\\"+file+".html"));
+        //TODO : change the directory of the folder to your directory6
+        BufferedReader Input=new BufferedReader(new FileReader("F:\\pages"+"\\"+file+".html"));
         URLS[NumOfCurFile]=Input.readLine();
         Stem.parser(file);
-
-        Input=new BufferedReader(new FileReader(path+"\\"+file+".txt"));
+        //TODO : change the directory of the folder to your directory7
+        Input=new BufferedReader(new FileReader("F:\\pages"+"\\"+file+".txt"));
         Titles[NumOfCurFile] = Input.readLine();
-        System.out.println(Titles[NumOfCurFile]);
+        Bodies[NumOfCurFile]=Input.readLine();
         int WordPos=0, WordImp=0;
         for(String str=Input.readLine();str!=null;str=Input.readLine())
         {
@@ -146,6 +147,20 @@ class InvertedIndexer
             ret = new String[num];
             for (int i = 0; i < num; i++)
                 ret[i] = Titles[Value.get(i).FileId];
+            return ret;
+        }
+        return null;
+    }
+
+    public String[] QueryBodies(String word)
+    {
+        String ret[];
+        ArrayList<Posting> Value=MainIndexer.get(word);
+        if(Value!=null) {
+            int num = Value.size();
+            ret = new String[num];
+            for (int i = 0; i < num; i++)
+                ret[i] = Bodies[Value.get(i).FileId];
             return ret;
         }
         return null;

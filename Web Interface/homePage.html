@@ -26,9 +26,9 @@
     <div class="container-fluid">
         <div class="row align-items-center">
             <div class="col align-self-center">
-                <h1>Search Engine</h1>
-                <h2>Try Now!</h2>
-                <form class="SearchBox" action="action_page" method="GET">
+                <h1 style="display: none;">Search Engine</h1>
+                <h2 style="display: none;">Try Now!</h2>
+                <form style="display: none;" class="SearchBox" action="action_page" method="GET">
                     <div><i class="searchBtn1 fa fa-search"></i></div>
                     <input style="display: none;" class="SearchBar" type="text" placeholder="" name="search">
                     <button style="display: none;" class="searchBtn" type="submit"><i class="fa fa-search"></i></button>
@@ -38,5 +38,14 @@
         </div>
     </div>
 </body>
+<script>
+    $(document).ready(function () {
+        $("h1").show(1000, () => {
+            $("h2").show(1000, () => {
+                $("form").show(1000);
+            })
+        })
+    })
+</script>
 
 </html>
