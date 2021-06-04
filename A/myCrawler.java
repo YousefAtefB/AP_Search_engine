@@ -24,7 +24,7 @@ import org.jsoup.nodes.Element;
     
 
 
-public class myCrawler
+public class myCrawler implements Runnable
 {
     static{
         //here we should initialize Current_Downloaded_File_Index from where it was left
@@ -40,6 +40,9 @@ public class myCrawler
 
     public static int Current_URL_Index = 0; //we crawl URLS with their index
 
+    myCrawler(){
+
+    }
     public static void download(String stringurl, String Seed, String NameOfFile)throws IOException
     //NameOfFile is the name of the destination file which will hold the contents of our downloaded webpage
     {
@@ -204,6 +207,11 @@ public class myCrawler
         }
         while(!buff.equals(url.getFile()) || !flag); //if read disallow:/filename
         return 1;
+
+    }
+
+    @Override
+    public void run() {
 
     }
 }
