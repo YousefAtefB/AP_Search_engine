@@ -22,8 +22,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-//import jdk.nashorn.internal.ir.CatchNode;
-
 import org.jsoup.nodes.Element;
     
 
@@ -48,14 +46,18 @@ public class myCrawler
     //NameOfFile is the name of the destination file which will hold the contents of our downloaded webpage
     {
         File PrevURLs = new File("PrevURLs.txt");
-        PrevURLs.createNewFile();
+        if(Current_URL_Index==0)
+            PrevURLs.createNewFile();
         BufferedReader bf = new BufferedReader(new FileReader(PrevURLs));
+        FileWriter fw = new FileWriter("PrevURLs.txt");
         String testURL;
         while((testURL = bf.readLine()) != null)
         {
             if(stringurl.equals(testURL))
             {
                 System.out.println("URL already crawled !");
+                fw.close();
+                bf.close();
                 return;
             }
         }
@@ -75,7 +77,7 @@ public class myCrawler
         NameOfFile = Integer.toString(Current_Downloaded_File_Index).concat(".html");
         Current_Downloaded_File_Index++;
         try{
-            File myFile = new File("D:" + File.separator + "project_garbage" + File.separator + NameOfFile); //hard coded to put in folder "DownPages"
+            File myFile = new File("D:" + File.separator + "project_garbage"+ File.separator + NameOfFile); //hard coded to put in folder "DownPages"
             //TODO : change the directory of the folder to your directory
             if(myFile.createNewFile())
             {
@@ -92,7 +94,7 @@ public class myCrawler
             System.out.println("error occured");
             e.printStackTrace();
         }
-        FileWriter Writer = new FileWriter("D:" + File.separator + "project_garbage" + File.separator + NameOfFile);
+        FileWriter Writer = new FileWriter("D:" + File.separator + "project_garbage"+ File.separator + NameOfFile);
         //TODO : change the directory of the folder to your directory
         try
         {
@@ -109,6 +111,7 @@ public class myCrawler
                 Writer.write("\n \n");
                 Writer.close();
                 System.out.println("Page Downloaded !");
+                fw.append(stringurl + System.lineSeparator());
             }
             
         }
@@ -118,6 +121,7 @@ public class myCrawler
             e.printStackTrace();
         }
 
+        fw.close();
         Stream.close();
         Writer.close();
         
@@ -232,16 +236,11 @@ public class myCrawler
         do
         {
             String filename = Integer.toString(i).concat(".html");
-            testfile = new File("D:" + File.separator + "project_garbage" + File.separator +  filename);
+            testfile = new File("D:" + File.separator + "project_garbage"+ File.separator  + filename);
             //TODO : change the directory of the folder to your directory
             i++;
         }
         while(testfile.exists());
-        return i-1;
+        return i;
     }
-
-    
-
-
-
 }
