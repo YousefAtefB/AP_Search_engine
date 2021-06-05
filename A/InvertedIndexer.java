@@ -9,6 +9,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 
+import java.lang.Math;
+
 class InvertedIndexer
 {
     class traits
@@ -47,6 +49,9 @@ class InvertedIndexer
     HashMap<String,ArrayList<Posting>> MainIndexer;
     Stemmer Stem;
 
+    HashMap<String,HashMap<Integer,Integer>>TF;
+    HashMap<String,Integer>IDF;
+
     public InvertedIndexer(String NamesOfFiles[])
     {
         NumOfCurFile=0;
@@ -56,6 +61,10 @@ class InvertedIndexer
         Stem=new Stemmer();
         MainIndexer=new HashMap<String,ArrayList<Posting>>();
         PartialIndexer= new ArrayList<HashMap<String,Posting>>();
+
+        TF= new HashMap<String,HashMap<Integer,Integer>>();
+        IDF=new HashMap<String,Integer>();
+
         try {
 
             for (int i = 0; i < NamesOfFiles.length; i++)
@@ -65,6 +74,8 @@ class InvertedIndexer
         {
             e.printStackTrace();
         }
+
+        UpdateIDF();
     }
 
     public void IndexFile(String file) throws Exception
@@ -84,6 +95,8 @@ class InvertedIndexer
         {
             for(String word : str.split(" "))
             {
+                CalcTF_IDF(word);
+
                 WordPos++;
                 Posting Value=CurPart.get(word);
                 
@@ -164,6 +177,42 @@ class InvertedIndexer
             return ret;
         }
         return null;
+    }
+
+    public void CalcTF_IDF(String word)
+    {
+        HashMap<Integer,Integer>Value=TF.get(word);
+        if(Value==null)
+        {
+            Value=new HashMap<Integer,Integer>();
+            TF.put(word,Value);
+        }
+
+        Integer TF_OC=Value.get(NumOfCurFile);
+        if(TF_OC==null)
+        {
+
+            Integer IDF_OC =IDF.get(word);
+            if(IDF_OC==null)
+            {
+                IDF_OC=new Integer(0);
+                IDF.put(word,IDF_OC);
+            }
+            IDF.put(word,IDF_OC+1);
+
+            TF_OC=new Integer(0);
+            Value.put(NumOfCurFile,TF_OC);
+        }
+        Value.put(NumOfCurFile,TF_OC+1);
+    }
+
+    void UpdateIDF()
+    {
+        for(Map.Entry<String,Integer> ver:IDF.entrySet())
+        {
+            int value= (int) Math.log(NumOfCurFile/ver.getValue());
+            IDF.put(ver.getKey(),value);
+        }
     }
 
 }
