@@ -72,10 +72,10 @@ public class myCrawler
         }
         
         int i;
-        NameOfFile = Integer.toString(Current_Downloaded_File_Index).concat(".txt");
+        NameOfFile = Integer.toString(Current_Downloaded_File_Index).concat(".html");
         Current_Downloaded_File_Index++;
         try{
-            File myFile = new File("D:" + File.separator + "java Folder" + File.separator + "DownPages" + File.separator + NameOfFile); //hard coded to put in folder "DownPages"
+            File myFile = new File("D:" + File.separator + "project_garbage" + File.separator + NameOfFile); //hard coded to put in folder "DownPages"
             //TODO : change the directory of the folder to your directory
             if(myFile.createNewFile())
             {
@@ -92,7 +92,8 @@ public class myCrawler
             System.out.println("error occured");
             e.printStackTrace();
         }
-        FileWriter Writer = new FileWriter(NameOfFile);
+        FileWriter Writer = new FileWriter("D:" + File.separator + "project_garbage" + File.separator + NameOfFile);
+        //TODO : change the directory of the folder to your directory
         try
         {
             if(ReadRobots(stringurl) == 1)
@@ -226,16 +227,17 @@ public class myCrawler
 
     public static int ContinueCrawler ()
     {
-        int i = 1;
+        int i = 0;
         File testfile;
         do
         {
-            String filename = Integer.toString(i).concat(".txt");
-            testfile = new File("D:" + File.separator + "java Folder" + File.separator + "DownPages" + File.separator + filename);
+            String filename = Integer.toString(i).concat(".html");
+            testfile = new File("D:" + File.separator + "project_garbage" + File.separator +  filename);
+            //TODO : change the directory of the folder to your directory
             i++;
         }
         while(testfile.exists());
-        return i;
+        return i-1;
     }
 
     

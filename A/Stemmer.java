@@ -413,11 +413,11 @@ public class Stemmer {
 
   public static String parser(String fileName) throws IOException {
     //TODO : change the directory of the folder to your directory3
-    FileWriter myWriter = new FileWriter("F:\\pages\\"+fileName+".txt");
+    FileWriter myWriter = new FileWriter("D:\\project_garbage\\"+fileName+".txt");
     StringBuilder sb = new StringBuilder();
     String line;
     //TODO : change the directory of the folder to your directory4
-    FileReader reader = new FileReader( "F:\\pages\\" +fileName+ ".html");
+    FileReader reader = new FileReader( "D:\\project_garbage\\" +fileName+ ".html");
     BufferedReader br = new BufferedReader(reader);
     while ((line = br.readLine()) != null) {
       sb.append(line);

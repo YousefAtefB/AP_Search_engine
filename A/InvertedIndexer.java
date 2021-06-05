@@ -72,11 +72,11 @@ class InvertedIndexer
         HashMap<String,Posting> CurPart=new HashMap<String,Posting>();
 
         //TODO : change the directory of the folder to your directory6
-        BufferedReader Input=new BufferedReader(new FileReader("F:\\pages"+"\\"+file+".html"));
+        BufferedReader Input=new BufferedReader(new FileReader("D:\\project_garbage"+"\\"+file+".html"));
         URLS[NumOfCurFile]=Input.readLine();
         Stem.parser(file);
         //TODO : change the directory of the folder to your directory7
-        Input=new BufferedReader(new FileReader("F:\\pages"+"\\"+file+".txt"));
+        Input=new BufferedReader(new FileReader("D:\\project_garbage"+"\\"+file+".txt"));
         Titles[NumOfCurFile] = Input.readLine();
         Bodies[NumOfCurFile]=Input.readLine();
         int WordPos=0, WordImp=0;

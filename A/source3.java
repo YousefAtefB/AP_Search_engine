@@ -15,7 +15,7 @@ public class source3 {
             myCrawler.Current_URL_Index = myCrawler.ContinueCrawler(); //get last url
             myCrawler.Current_Downloaded_File_Index = myCrawler.Current_URL_Index;
 
-            String page = "URLs.txt";        //contains all our URLs till now
+            String page = "A/URLs.txt";        //contains all our URLs till now
             File urlFILE = new File(page);
             FileReader fr = new FileReader(urlFILE);
             BufferedReader br = new BufferedReader(fr);
