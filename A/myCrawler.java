@@ -53,7 +53,7 @@ public class myCrawler
         String testURL;
         while((testURL = bf.readLine()) != null)
         {
-            if(stringurl == testURL)
+            if(stringurl.equals(testURL))
             {
                 System.out.println("URL already crawled !");
                 return;

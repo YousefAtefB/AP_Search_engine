@@ -1,12 +1,12 @@
 package A;
 public class Main {
-    static String   arr[]= new String[56];
+    static String   arr[]= new String[39];
    static {
-       for (int i = 0; i < 56; i++) {
+       for (int i = 0; i < 39; i++) {
            arr[i] = Integer.toString(i);
        }
    }
-    public  static InvertedIndexer II= new InvertedIndexer(arr);;
+    public  static InvertedIndexer II= new InvertedIndexer(arr);
 
     static public void main(String args[]) throws Exception
     {

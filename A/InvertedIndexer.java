@@ -1,19 +1,17 @@
 package A;
 
+import java.io.*;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.io.File;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.ArrayList;
 
 import java.lang.Math;
 
-class InvertedIndexer
+class InvertedIndexer implements Serializable
 {
-    class traits
+    class traits implements Serializable
     {
         int Position,Importance;
         public traits(int pos,int imp)
@@ -23,7 +21,7 @@ class InvertedIndexer
         }
     }
 
-    class Posting
+    class Posting implements Serializable
     {
         int FileId;
         ArrayList<traits> Ocurrences;
@@ -76,6 +74,11 @@ class InvertedIndexer
         }
 
         UpdateIDF();
+        try {
+            SaveIndexer();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void IndexFile(String file) throws Exception
@@ -213,6 +216,15 @@ class InvertedIndexer
             int value= (int) Math.log(NumOfCurFile/ver.getValue());
             IDF.put(ver.getKey(),value);
         }
+    }
+
+    void SaveIndexer() throws Exception
+    {
+        FileOutputStream fout=new FileOutputStream("SaveIndexer.txt");
+        ObjectOutputStream out =new ObjectOutputStream(fout);
+        out.writeObject(this);
+        out.flush();
+        out.close();
     }
 
 }

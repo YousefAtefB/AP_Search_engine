@@ -11,7 +11,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-public class Stemmer {
+public class Stemmer implements Serializable{
   private char[] b;
   private int i, i_end, j, k;
   private static final int INITIAL_SIZE = 40;
