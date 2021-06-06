@@ -1,8 +1,8 @@
 package A;
 public class Main {
-    static String   arr[]= new String[39];
+    static String   arr[]= new String[112];
    static {
-       for (int i = 0; i < 39; i++) {
+       for (int i = 0; i < 112; i++) {
            arr[i] = Integer.toString(i);
        }
    }

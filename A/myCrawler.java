@@ -18,6 +18,8 @@ import java.net.URLConnection;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -34,33 +36,36 @@ public class myCrawler
         //basically a for loop
     }
     
-    public static int Current_Downloaded_File_Index = 0;   //we download files with their index
+    public static AtomicInteger Current_Downloaded_File_Index = new AtomicInteger();   //we download files with their index
         //example: 1.txt then 2.txt then 3.txt and so one,
         //and in the first line of each file, we put the url of this page so that
         //the indexer can link its conents to the url.
 
 
-    public static int Current_URL_Index = 0; //we crawl URLS with their index
+    public static AtomicInteger Current_URL_Index = new AtomicInteger(); //we crawl URLS with their index
 
-    public static void download(String stringurl, String Seed, String NameOfFile)throws IOException
+
+    public static void download(String stringurl, String Seed, int Tag)throws IOException
     //NameOfFile is the name of the destination file which will hold the contents of our downloaded webpage
     {
         File PrevURLs = new File("PrevURLs.txt");
-        if(Current_URL_Index==0)
-            PrevURLs.createNewFile();
+        PrevURLs.createNewFile();
         BufferedReader bf = new BufferedReader(new FileReader(PrevURLs));
-        FileWriter fw = new FileWriter("PrevURLs.txt");
+        FileWriter fw = new FileWriter("PrevURLs.txt", true);
         String testURL;
+        fw.append(stringurl + System.lineSeparator());
+
         while((testURL = bf.readLine()) != null)
         {
-            if(stringurl.equals(testURL))
+            if(stringurl == testURL)
             {
                 System.out.println("URL already crawled !");
-                fw.close();
                 bf.close();
+                fw.close();
                 return;
             }
         }
+        fw.close();
         bf.close();
         URL url = new URL(stringurl);
         InputStream Stream;
@@ -74,11 +79,14 @@ public class myCrawler
         }
         
         int i;
-        NameOfFile = Integer.toString(Current_Downloaded_File_Index).concat(".html");
-        Current_Downloaded_File_Index++;
+        String NameOfFile = Integer.toString(Current_Downloaded_File_Index.get()).concat(".html");
+
+        Current_Downloaded_File_Index.incrementAndGet();
+
+        File myFile = new File("D:" + File.separator + "java Folder" + File.separator + "DownPages" + File.separator + NameOfFile); //hard coded to put in folder "DownPages"
+        //TODO : change the directory of the folder to your directory
+
         try{
-            File myFile = new File("D:" + File.separator + "project_garbage"+ File.separator + NameOfFile); //hard coded to put in folder "DownPages"
-            //TODO : change the directory of the folder to your directory
             if(myFile.createNewFile())
             {
                 System.out.println("File " + NameOfFile + " Created");
@@ -94,14 +102,13 @@ public class myCrawler
             System.out.println("error occured");
             e.printStackTrace();
         }
-        FileWriter Writer = new FileWriter("D:" + File.separator + "project_garbage"+ File.separator + NameOfFile);
-        //TODO : change the directory of the folder to your directory
+        FileWriter Writer = new FileWriter(myFile, true);
         try
         {
             if(ReadRobots(stringurl) == 1)
             {
-                AddUrl(Seed, stringurl);        //crawl the url for other urls and add them to urls.txt
-                Current_URL_Index++;
+                AddUrl(Seed, stringurl, Tag);        //crawl the url for other urls and add them to urls.txt
+                Current_URL_Index.incrementAndGet();
                 Writer.write(stringurl);        //(IMPORTANT)first line is always the url of the page
                 Writer.append("\n");
                 while((i = Stream.read()) != -1)
@@ -111,7 +118,7 @@ public class myCrawler
                 Writer.write("\n \n");
                 Writer.close();
                 System.out.println("Page Downloaded !");
-                fw.append(stringurl + System.lineSeparator());
+
             }
             
         }
@@ -129,7 +136,7 @@ public class myCrawler
     }
 
 
-    public static void AddUrl (String urlfile, String ourURL) throws IOException
+    public static void AddUrl (String urlfile, String ourURL, int tag) throws IOException
     {
         //Document doc = Jsoup.connect(ourURL).userAgent("Mozilla").get();
         Document doc = Jsoup.connect(ourURL).get();
@@ -140,11 +147,11 @@ public class myCrawler
         }
         //string OutPut_Link = links.attr("href");
         File file = new File(urlfile);
-        FileWriter Writer = new FileWriter(file);
+        FileWriter Writer = new FileWriter(file, true);
         for(Element oneLink : links)
         {
-            Writer.append(System.lineSeparator() + oneLink.attr("abs:href"));
-            System.out.println("\n new URL : " + ourURL + " added! \n");
+            Writer.append(System.lineSeparator() + tag +oneLink.attr("abs:href"));
+            //System.out.println("\n new URL : " + ourURL + " added! \n");
         }
         
         
@@ -155,6 +162,9 @@ public class myCrawler
 
 
     public static int ReadRobots (String urlstring) throws IOException
+            //TODO : debug this function for special web pages like google , it doesn't allow google.com to be crawled !!
+            //because we are checking for https://google.com/ , the filename is "/" which is in every line in the robots.txt :(
+            //we should just check if there is a (whole line) like Disallow: / (but i couldn't scan the end of line char).
     {
         
         URL url = new URL(urlstring);
@@ -163,7 +173,9 @@ public class myCrawler
         String currentFile = url.getFile();
         String hostname = url.getHost();
         String HostURL =  url.getProtocol().concat("://").concat(hostname).concat("/robots.txt"); //root directory then robots.txt
+
         Document doc = Jsoup.connect(HostURL).get();
+
         String pgtext = doc.body().text();
         Scanner scanner = new Scanner(pgtext);                 
         //if end of file is reached before we reach our filename in a disallow (true)
@@ -174,11 +186,27 @@ public class myCrawler
         {
             buff = scanner.nextLine();
         }
+        if(currentFile == "/")     // root directory of the page
+        {
+             String testDisallowAll1 = "Disallow: / Disallow";
+             String testDisallowAll2 = "Disallow: / Allow";
+             String testDisallowAll3 = "Disallow: / U";
+             String testDisallowAll4 = "Disallow: / #";
+            if(buff.contains(testDisallowAll1) || buff.contains(testDisallowAll2) || buff.contains(testDisallowAll3) || buff.contains(testDisallowAll4))
+            {
+                System.out.println("Prohibited to crawl !");
+                scanner.close();
+                return 0;
+            }
+        }
         String test1 = "Disallow: ".concat(currentFile);
         String test2 = "Disallow:".concat(currentFile);
+        //String testDisallowAll = "Disallow: /*";
+        //String testDisallowAll2 = "Disallow:/*";
+        //String testforRootDir = "Disallow: "
         if(buff.contains(test1) || buff.contains(test2))
         {
-            //System.out.println("Prohibited to crawl !");
+            System.out.println("Prohibited to crawl !");
             scanner.close();
             return 0;
         }
@@ -236,11 +264,10 @@ public class myCrawler
         do
         {
             String filename = Integer.toString(i).concat(".html");
-            testfile = new File("D:" + File.separator + "project_garbage"+ File.separator  + filename);
-            //TODO : change the directory of the folder to your directory
+            testfile = new File("D:" + File.separator + "java Folder" + File.separator + "DownPages" + File.separator + filename);
             i++;
         }
         while(testfile.exists());
-        return i;
+        return i - 1;
     }
 }
