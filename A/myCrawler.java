@@ -18,7 +18,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import org.jsoup.nodes.Element;
-    
+
 
 
 public class myCrawler
@@ -28,11 +28,11 @@ public class myCrawler
         //same thing to be done with index of the urls to be crawled
         //basically a for loop
     }
-    
+
     public static AtomicInteger Current_Downloaded_File_Index = new AtomicInteger();   //we download files with their index
-        //example: 1.txt then 2.txt then 3.txt and so one,
-        //and in the first line of each file, we put the url of this page so that
-        //the indexer can link its conents to the url.
+    //example: 1.txt then 2.txt then 3.txt and so one,
+    //and in the first line of each file, we put the url of this page so that
+    //the indexer can link its conents to the url.
 
 
     public static AtomicInteger Current_URL_Index = new AtomicInteger(); //we crawl URLS with their index
@@ -74,7 +74,7 @@ public class myCrawler
         {
             return;
         }
-        
+
         int i;
 
         File myFile=null;
@@ -116,7 +116,7 @@ public class myCrawler
                 System.out.println("Page Downloaded !");
 
             }
-            
+
         }
         catch(IOException e)
         {
@@ -127,7 +127,7 @@ public class myCrawler
         fw.close();
         Stream.close();
         Writer.close();
-        
+
 
     }
 
@@ -150,8 +150,8 @@ public class myCrawler
             Total_Num_Of_URLS.incrementAndGet();
             //System.out.println("\n new URL : " + ourURL + " added! \n");
         }
-        
-        
+
+
         Writer.close();
         System.out.println("\n URL Parsed for other URLS !!\n");
 
@@ -165,13 +165,31 @@ public class myCrawler
     {
 
         URL url = new URL(urlstring);
-        URLConnection urlCon = url.openConnection();
+        URLConnection urlCon;
+        try
+        {
+            urlCon = url.openConnection();
+        }
+        catch(Exception e)
+        {
+            return 0;
+        }
+
 
         String currentFile = url.getFile();
         String hostname = url.getHost();
         String HostURL =  url.getProtocol().concat("://").concat(hostname).concat("/robots.txt"); //root directory then robots.txt
 
-        Document doc = Jsoup.connect(HostURL).get();
+        Document doc;
+        try
+        {
+            doc = Jsoup.connect(HostURL).get();
+        }
+        catch(Exception e)
+        {
+            return 0;
+        }
+
 
         String pgtext = doc.body().text();
         Scanner scanner = new Scanner(pgtext);
@@ -234,6 +252,7 @@ public class myCrawler
             return 1;
         }
     }
+
     public static int ContinueCrawler ()
     {
         int i = 0;
