@@ -1,14 +1,7 @@
 package A;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 
 import java.net.URL;
@@ -44,6 +37,8 @@ public class myCrawler
 
     public static AtomicInteger Current_URL_Index = new AtomicInteger(); //we crawl URLS with their index
 
+    public static AtomicInteger Total_Num_Of_URLS = new AtomicInteger(); //we crawl URLS with their index
+
 
     public static void download(String stringurl, String Seed, int Tag)throws IOException
     //NameOfFile is the name of the destination file which will hold the contents of our downloaded webpage
@@ -53,18 +48,20 @@ public class myCrawler
         BufferedReader bf = new BufferedReader(new FileReader(PrevURLs));
         FileWriter fw = new FileWriter("PrevURLs.txt", true);
         String testURL;
-        fw.append(stringurl + System.lineSeparator());
 
         while((testURL = bf.readLine()) != null)
         {
-            if(stringurl == testURL)
+            if(stringurl.equals(testURL))
             {
                 System.out.println("URL already crawled !");
+                System.out.println(testURL);
                 bf.close();
                 fw.close();
                 return;
             }
         }
+
+        fw.append(stringurl + System.lineSeparator());
         fw.close();
         bf.close();
         URL url = new URL(stringurl);
@@ -79,28 +76,27 @@ public class myCrawler
         }
         
         int i;
-        String NameOfFile = Integer.toString(Current_Downloaded_File_Index.get()).concat(".html");
 
-        Current_Downloaded_File_Index.incrementAndGet();
+        File myFile=null;
+        synchronized (myCrawler.class) {
+            String NameOfFile = Integer.toString(Current_Downloaded_File_Index.get()).concat(".html");
 
-        File myFile = new File("D:" + File.separator + "java Folder" + File.separator + "DownPages" + File.separator + NameOfFile); //hard coded to put in folder "DownPages"
-        //TODO : change the directory of the folder to your directory
+            Current_Downloaded_File_Index.incrementAndGet();
 
-        try{
-            if(myFile.createNewFile())
-            {
-                System.out.println("File " + NameOfFile + " Created");
+            myFile = new File("D:" + File.separator + "java Folder" + File.separator + "DownPages" + File.separator + NameOfFile); //hard coded to put in folder "DownPages"
+            //TODO : change the directory of the folder to your directory
+
+            try {
+                if (myFile.createNewFile()) {
+                    System.out.println("File " + NameOfFile + " Created");
+                } else {
+                    IOException e = new IOException("File already exists");
+                    throw (e);
+                }
+            } catch (IOException e) {
+                System.out.println("error occured");
+                e.printStackTrace();
             }
-            else
-            {
-                IOException e = new IOException("File already exists");
-                throw (e);
-            }
-        }
-        catch (IOException e)
-        {
-            System.out.println("error occured");
-            e.printStackTrace();
         }
         FileWriter Writer = new FileWriter(myFile, true);
         try
@@ -141,7 +137,7 @@ public class myCrawler
         //Document doc = Jsoup.connect(ourURL).userAgent("Mozilla").get();
         Document doc = Jsoup.connect(ourURL).get();
         Elements links = doc.select("a[href]");    //or "a"
-        if(links.isEmpty())
+        if(links.isEmpty() || Total_Num_Of_URLS.get()>=5000)
         {
             return;
         }
@@ -151,6 +147,7 @@ public class myCrawler
         for(Element oneLink : links)
         {
             Writer.append(System.lineSeparator()  +tag+oneLink.attr("abs:href"));
+            Total_Num_Of_URLS.incrementAndGet();
             //System.out.println("\n new URL : " + ourURL + " added! \n");
         }
         
@@ -270,4 +267,30 @@ public class myCrawler
         while(testfile.exists());
         return i - 1;
     }
+
+    public static void FullContinueCrawler() throws IOException {
+        int i=0;
+        while(true)
+        {
+            String dir="D:" + File.separator + "java Folder" + File.separator + "DownPages" + File.separator;
+            File testfile= new File(dir+Integer.toString(i)+".html");
+            if(!testfile.exists())
+            {
+                Current_Downloaded_File_Index.set(i);
+                break;
+            }
+            i++;
+        }
+
+        String page = "A/URLs.txt";
+        File urlFILE = new File(page);
+        FileReader fr = new FileReader(urlFILE);
+        BufferedReader br = new BufferedReader(fr);
+
+        Total_Num_Of_URLS.set(0);
+        for(String line=br.readLine();line!=null;line=br.readLine())
+            Total_Num_Of_URLS.incrementAndGet();
+
+    }
+
 }

@@ -8,18 +8,22 @@ import java.util.Scanner;
 
 public class source3 {
 
-    public static void main(String [] args)
-    {
+    public static void main(String [] args) throws IOException {
 
             Scanner input =new Scanner(System.in);
             System.out.println("enter number of threads");
             int N=input.nextInt();
 
-            myCrawler.Current_Downloaded_File_Index.set(myCrawler.ContinueCrawler()); //get last url
-            if(myCrawler.Current_Downloaded_File_Index.get() == 0)
-            {
-                myCrawler.Current_URL_Index.set(myCrawler.Current_Downloaded_File_Index.get());
-            }
+//            myCrawler.Current_Downloaded_File_Index.set(myCrawler.ContinueCrawler()); //get last url
+//            if(myCrawler.Current_Downloaded_File_Index.get() == 0)
+//            {
+//                myCrawler.Current_URL_Index.set(myCrawler.Current_Downloaded_File_Index.get());
+//            }
+
+            myCrawler.FullContinueCrawler();
+
+            System.out.println("indx="+myCrawler.Current_Downloaded_File_Index);
+            System.out.println("total="+myCrawler.Total_Num_Of_URLS);
 
             // starting the threads
             for(int i=0;i<N;i++)
