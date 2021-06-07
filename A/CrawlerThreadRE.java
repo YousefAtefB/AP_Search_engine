@@ -32,38 +32,45 @@ public class CrawlerThreadRE implements Runnable{
                 {
                     line = br.readLine();
 
-                    if(i % noThreads == Rank && (line != null) && (line.charAt(0) == 'h') )  //case 1: line is a multiple of Rank and no prefix (tag)
+//                    System.out.println(line.indexOf('h'));
+//                    System.out.println(line.substring(0,line.indexOf('h')));
+
+                    //if(i % noThreads == Rank && (line != null) && (line.charAt(0) == 'h') )  //case 1: line is a multiple of Rank and no prefix (tag)
+                    if(i%noThreads==Rank && line!=null)
                     {
                         // then crawl it but not break from the initial while loop
+                        int indx=line.indexOf('h');
+                        if(indx==-1)continue;
+                        line=line.substring(indx);
                         myCrawler.download(line, page, Rank);
                         if(myCrawler.Current_Downloaded_File_Index.get() >= 5000)
                             break;
                     }
-                    else if ((line != null) && (line.charAt(0) == Rank + '0') ) //case 2 : line has the tag of the thread
-                    {
-                        // then crawl it and break from the initial while loop
-                        //but first, remove the tag from the line
-                        String urlLine = line.substring(1);
-                        myCrawler.download(urlLine, page, Rank);
-                        if(myCrawler.Current_Downloaded_File_Index.get() >= 5000)
-                            break;
-
-                        break;
-                    }
+//                    else if ((line != null) && (line.charAt(0) != 'h')&&( Integer.parseInt(line.substring(0,line.indexOf('h')))== Rank) ) //case 2 : line has the tag of the thread
+//                    {
+//                        // then crawl it and break from the initial while loop
+//                        //but first, remove the tag from the line
+//                        String urlLine = line.substring(1);
+//                        myCrawler.download(urlLine, page, Rank);
+//                        if(myCrawler.Current_Downloaded_File_Index.get() >= 5000)
+//                            break;
+//
+//                        break;
+//                    }
                     i++;
                 }
 
-                while(myCrawler.Current_Downloaded_File_Index.get() < 5000)
-                {
-                    line = br.readLine();
-                    if((line != null) && line.charAt(0) == Rank + '0')             //if line has the tag
-                    {
-                        String urlLine = line.substring(1);
-                        myCrawler.download(urlLine, page, Rank); //crawl it
-                    }
-                }
-
-                fr.close();
+//                while(myCrawler.Current_Downloaded_File_Index.get() < 5000)
+//                {
+//                    line = br.readLine();
+//                    if((line != null) && (line.charAt(0) != 'h') && ( Integer.parseInt(line.substring(0,line.indexOf('h')))== Rank))             //if line has the tag
+//                    {
+//                        String urlLine = line.substring(1);
+//                        myCrawler.download(urlLine, page, Rank); //crawl it
+//                    }
+//                }
+//
+//                fr.close();
 
         }
         catch (IOException e)

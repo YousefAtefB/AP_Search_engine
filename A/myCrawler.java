@@ -150,7 +150,7 @@ public class myCrawler
         FileWriter Writer = new FileWriter(file, true);
         for(Element oneLink : links)
         {
-            Writer.append(System.lineSeparator() + tag +oneLink.attr("abs:href"));
+            Writer.append(System.lineSeparator()  +tag+oneLink.attr("abs:href"));
             //System.out.println("\n new URL : " + ourURL + " added! \n");
         }
         
