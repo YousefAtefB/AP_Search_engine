@@ -159,14 +159,14 @@ public class myCrawler
 
 
     public static int ReadRobots (String urlstring) throws IOException
-            //TODO : debug this function for special web pages like google , it doesn't allow google.com to be crawled !!
-            //because we are checking for https://google.com/ , the filename is "/" which is in every line in the robots.txt :(
-            //we should just check if there is a (whole line) like Disallow: / (but i couldn't scan the end of line char).
+    //TODO : debug this function for special web pages like google , it doesn't allow google.com to be crawled !!
+    //because we are checking for https://google.com/ , the filename is "/" which is in every line in the robots.txt :(
+    //we should just check if there is a (whole line) like Disallow: / (but i couldn't scan the end of line char).
     {
-        
+
         URL url = new URL(urlstring);
         URLConnection urlCon = url.openConnection();
-        
+
         String currentFile = url.getFile();
         String hostname = url.getHost();
         String HostURL =  url.getProtocol().concat("://").concat(hostname).concat("/robots.txt"); //root directory then robots.txt
@@ -174,7 +174,7 @@ public class myCrawler
         Document doc = Jsoup.connect(HostURL).get();
 
         String pgtext = doc.body().text();
-        Scanner scanner = new Scanner(pgtext);                 
+        Scanner scanner = new Scanner(pgtext);
         //if end of file is reached before we reach our filename in a disallow (true)
         //otherwise (false)
         String buff = "lol";
@@ -183,77 +183,57 @@ public class myCrawler
         {
             buff = scanner.nextLine();
         }
-        if(currentFile == "/")     // root directory of the page
+
+
+        int cutIndex = buff.indexOf("User-agent: *");
+        if(cutIndex == -1)
         {
-             String testDisallowAll1 = "Disallow: / Disallow";
-             String testDisallowAll2 = "Disallow: / Allow";
-             String testDisallowAll3 = "Disallow: / U";
-             String testDisallowAll4 = "Disallow: / #";
+            System.out.println("good to crawl !");
+            scanner.close();
+            return 1;
+        }
+        buff = buff.substring(cutIndex + 1);  //now the text begins with "ser-agents: *"
+        int cutSuffix = buff.indexOf("User-agent:");
+        if(cutSuffix > 0 )
+        {
+            buff = buff.substring(0, cutSuffix); //now the test is only the user agents * block
+        }
+
+        String test1 = "Disallow: ".concat(currentFile);
+        String test2 = "Disallow:".concat(currentFile);
+
+
+        if(currentFile.equals("/"))     // root directory of the page
+        {
+            String testDisallowAll1 = "Disallow: / Disallow";
+            String testDisallowAll2 = "Disallow: / Allow";
+            String testDisallowAll3 = "Disallow: / U";
+            String testDisallowAll4 = "Disallow: / #";
             if(buff.contains(testDisallowAll1) || buff.contains(testDisallowAll2) || buff.contains(testDisallowAll3) || buff.contains(testDisallowAll4))
             {
                 System.out.println("Prohibited to crawl !");
                 scanner.close();
                 return 0;
             }
-        }
-        String test1 = "Disallow: ".concat(currentFile);
-        String test2 = "Disallow:".concat(currentFile);
-        //String testDisallowAll = "Disallow: /*";
-        //String testDisallowAll2 = "Disallow:/*";
-        //String testforRootDir = "Disallow: "
-        if(buff.contains(test1) || buff.contains(test2))
-        {
-            System.out.println("Prohibited to crawl !");
+            System.out.println("good to crawl !");
             scanner.close();
-            return 0;
+            return 1;
         }
-        //System.out.println("good to crawl");
-        scanner.close();
-        return 1;
-        // do{
-        //     //buff = Stream.readLine();
-            
-        //     buff = scanner.nextLine();
-        //     // if (buff == null)
-        //     // {
-        //     //     flag = true;
-        //     // }
-        //     System.out.println(buff);
-        // }
-        // while(scanner.hasNextLine() && !(buff.contains("User-agent: *")) && !(buff.contains("User-agent:*")) ); //group of all crawlers
-        
-        
-       
 
-        // do{
-        //     do{
 
-        //         buff = scanner.nextLine();
-        //         if ( buff == null)
-        //         {
-        //             flag = true;
-        //         }
-        //         System.out.println(buff);
-        //     }
-        //     while( !flag && scanner.hasNextLine() && !(buff.contains("Disallow: ")) && !(buff.contains("Disallow:"))); //if read disallow
-    
-        //     if( !flag && buff.contains(currentFile))
-        //     {
-        //          ///////////////////////// just for debugging//////////////////////
-        //          System.out.println("Prohibited to crawl !");
-                
-        //          return 0;
-        //     } 
-       
-        // }
-        // while(!flag && scanner.hasNextLine() && !(buff.contains("User-Agent"))); //if not read disallow:/filename
-        // Stream.close();
-        
-        // System.out.println("good to crawl");
-        // return 1;
-    
+        else
+        {
+            if(buff.contains(test1) || buff.contains(test2))
+            {
+                System.out.println("Prohibited to crawl !");
+                scanner.close();
+                return 0;
+            }
+            //System.out.println("good to crawl");
+            scanner.close();
+            return 1;
+        }
     }
-
     public static int ContinueCrawler ()
     {
         int i = 0;
